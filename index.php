@@ -89,7 +89,7 @@ function get_duration($file) {
  							<source src="videos/<?php echo htmlspecialchars($_GET['vid']); ?>.mp4" type='video/mp4'>
 							<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 						</video>
-						<p class="backbutton"><a href="/"><-- Back</a></p>
+						<p class="backbutton"><a href="/">&lt;-- Back</a></p>
 <?php } ?>					</td>
 					<td id="borderright"></td>
 				</tr>
