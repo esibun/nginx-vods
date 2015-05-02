@@ -4,7 +4,7 @@
 
 # Installation
 ### MySQL
-- CREATE DATABASE vods
+- `CREATE DATABASE vods`
 - ``CREATE TABLE IF NOT EXISTS `api_cache` (
   `cachekey` varchar(30) NOT NULL,
   `value` varchar(100) NOT NULL,
