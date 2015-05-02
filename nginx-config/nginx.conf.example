@@ -1,0 +1,93 @@
+#user html;
+worker_processes  1;
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+
+
+events {
+	worker_connections  1024;
+}
+
+rtmp {
+	server {
+		listen 1935;
+		application esibun {
+			live on;
+			record off;
+
+			allow publish 192.168.1.0/24;
+			allow publish 127.0.0.1;
+			deny publish all;
+			allow play all;
+
+			idle_streams off;
+			wait_video on;
+			sync 500ms;
+
+			exec_options on;
+			exec ffmpeg -i rtmp://localhost/esibun/$name -vcodec libx264 -preset veryfast -b:v 3500k -sws_flags lanczos -maxrate 3500k -minrate 3500k -bufsize 3500k -acodec libfdk_aac -b:a 160k -g 120 -f flv rtmp://localhost/esibun/live_esibun name=hdmain;
+			exec ffmpeg -i rtmp://localhost/esibun/$name -vcodec libx264 -preset veryfast -b:v 500k -s 424x240 -sws_flags lanczos -maxrate 500k -minrate 500k -bufsize 500k -acodec libfdk_aac -b:a 64k -g 120 -f flv rtmp://localhost/esibun/live_esibun_low name=hdmain;
+			exec sh /etc/nginx/hdrec.sh name=hdmain;
+
+			exec sh /etc/nginx/hdreclocal.sh name=hdrec;
+
+			on_publish http://rec.esibun.net/update.php;
+                        on_publish_done http://rec.esibun.net/update.php;
+
+			push rtmp://live-jfk.twitch.tv/app/<stream_key> name=live_esibun;
+			push rtmp://live-jfk.twitch.tv/app/<stream_key> name=live_esibun_low;
+		}
+
+	 }
+}
+
+http {
+	include       mime.types;
+	default_type  application/octet-stream;
+
+	#log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+	#                  '$status $body_bytes_sent "$http_referer" '
+	#                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+	#access_log  logs/access.log  main;
+
+	sendfile        on;
+	#tcp_nopush     on;
+
+	#keepalive_timeout  0;
+	keepalive_timeout  65;
+
+	gzip  on;
+
+	proxy_cache_path /var/www/nginx_cache levels=1:2 keys_zone=main:10m max_size=1g inactive=25s;
+	proxy_temp_path /var/www/nginx_temp;
+
+	server {
+	       listen 80;
+	       server_name *.esibun.net;
+	       root /srv/http_default;
+	       location / {
+	       		try_files $uri /index.html;
+	       }
+	}       
+	server {
+	       listen 80;
+	       server_name rec.esibun.net;
+	       root /srv/rec;
+	       location / {
+	       		index index.php;
+	       }
+	       location ~ \.php$ {
+	       		try_files $uri =404;
+			fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+			fastcgi_pass unix:/run/php-fpm/php-fpm.sock;
+			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			include fastcgi_params;
+	       }
+	}
+}
