@@ -53,7 +53,8 @@ hr {
 	margin-left: auto;
 	margin-right: auto;
 	width: 75vw;
-	height: 42.1875vw;
+	/* height: calc(42.1875vw + 43px); */
+	height: calc(75vw * 480 / 852 + 33px);
 }
 .videoheader {
 	margin-bottom: 10pt;
@@ -81,4 +82,17 @@ a {
 	text-overflow: ellipsis;
 	color: #777;
 	display: inline-block;
+}
+.video-js.static-bar .vjs-control-bar {
+	display: block;
+}
+.video-js.static-bar.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar {
+	opacity: 1;
+	visibility: visible;
+}
+.video-js.static-bar .vjs-poster {
+	background-postiion: 50% 0;
+}
+.video-js.static-bar .vjs-tech {
+	height: calc(75vw * 480 / 852);
 }

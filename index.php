@@ -85,7 +85,7 @@ function get_duration($file) {
 						<hr>
 						<h2><?php echo lookup_full_name(mysql_escape_string($_GET['vid'])); ?></h2>
 
-						<video id="vod" class="video-js vjs-default-skin" controls autoplay preload="auto" poster="<?php echo thumbnail(mysql_escape_string($_GET['vid'])); ?>" width="75vw" height="42.1875vw" data-setup='{"nativeControlsForTouch": false}'>
+						<video id="vod" class="video-js vjs-default-skin static-bar" controls autoplay preload="auto" poster="<?php echo thumbnail(mysql_escape_string($_GET['vid'])); ?>" width="75vw" height="42.1875vw" data-setup='{"nativeControlsForTouch": false}'>
  							<source src="videos/<?php echo htmlspecialchars($_GET['vid']); ?>.mp4" type='video/mp4'>
 							<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 						</video>
