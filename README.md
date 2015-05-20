@@ -1,3 +1,5 @@
+**Note: This repository has been superseded by [esibun/nginx-vods-go](https://github.com/esibun/nginx-vods-go)**
+
 # Pre-installation
 - Install nginx-rtmp/php/mysql
 - Install ffmpeg/ffprobe and ensure they are on PATH and executable by PHP
